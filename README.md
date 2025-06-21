@@ -78,7 +78,7 @@ Flood data visualization is managed through the `FloodVisualizer.cs` script, whi
 1. **Data Grid Size**: The flood data is sampled on a **H×W grid**, where each point corresponds to a geospatial location (typically several meters apart), covering an area of several kilometers.
 
 2. **Terrain Height Sampling**:
-   - For each grid point, the **terrain height is obtained by querying the Cesium World Terrain tileset** using Cesium for Unity's API.
+   - For each grid point, the **terrain height is obtained by querying the Cesium World Terrain tileset** using Cesium for Unity's API ([SampleHeightMostDetailed](https://cesium.com/learn/cesium-unity/ref-doc/classCesiumForUnity_1_1Cesium3DTileset.html#a06f95d6556fbcd626d57901941c5602f)).
    - This ensures that the flood water surface is accurately positioned relative to the underlying digital terrain model.
    - The water depth at each point is then **added to the terrain height** to compute the final world-space elevation of the water surface.
 
