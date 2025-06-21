@@ -71,23 +71,84 @@ Flood data starts with a `.tif` file (e.g., `flood_data.tif`) and is converted i
 
 ## 🔍 Flood Visualization Details
 
-The `FloodVisualizer.cs` script generates a mesh representation of the flood area:
+Flood data visualization is managed through the `FloodVisualizer.cs` script, which dynamically generates and renders a water mesh based on geospatial data processed from a `.tif` file.
 
-- A **256×256** flood grid is divided into **16×16 submeshes** for better precision and performance.
-- Each submesh uses a `CesiumGlobeAnchor` to position it accurately on the globe.
-- Vertices are stored **relative to the anchor origin** to avoid floating-point precision issues in Unity.
-- A custom ShaderGraph-based **FloodShader** material enables dynamic control over per-vertex color and alpha.
+### 🔧 Visualization Pipeline
 
-> ✅ Submeshes + anchored-relative coordinates ensure rendering stability across large world scales.  
-> 🔧 **TODO**: Improve color mapping to visually distinguish flood depths using gradient-based colorization.
+1. **Data Grid Size**: The flood data is sampled on a **H×W grid**, where each point corresponds to a geospatial location (typically several meters apart), covering an area of several kilometers.
+
+2. **Terrain Height Sampling**:
+   - For each grid point, the **terrain height is obtained by querying the Cesium World Terrain tileset** using Cesium for Unity's API.
+   - This ensures that the flood water surface is accurately positioned relative to the underlying digital terrain model.
+   - The water depth at each point is then **added to the terrain height** to compute the final world-space elevation of the water surface.
+
+3. **Mesh Partitioning**:
+   - To maintain rendering precision and performance in Unity (which uses single-precision floats), the flood grid is divided into **16×16 submeshes**.
+   - Each submesh represents a manageable section of the flood area, enabling efficient culling and accurate local positioning.
+
+4. **Anchoring in World Space**:
+   - Each submesh is anchored with a `CesiumGlobeAnchor` component.
+   - This lets the submesh exist at its correct global geospatial location using **double-precision coordinates** from Cesium, while keeping the mesh vertices local to the anchor (which Unity requires to be single-precision).
+
+5. **Vertex Generation**:
+   - Vertex positions are calculated relative to the submesh anchor.
+   - Heights are offset by flood depth on top of the queried terrain elevation.
+   - An **invalid mask** is applied to exclude undefined or missing data points from visualization.
+
+6. **Custom Water Shader**:
+   - A **ShaderGraph-based material** dynamically controls the RGB color and alpha of each vertex based on flood depth.
+   - This allows for visual representation of depth severity through color blending and transparency.
+
+### 🧪 Design Considerations
+
+- **Floating Point Precision**: Partitioning into submeshes and using anchor-relative coordinates avoids instability from large global positions in Unity.
+- **Terrain Accuracy**: Cesium World Terrain queries ensure the water sits precisely above the real-world ground level.
+- **Performance**: The architecture scales efficiently with mesh tiling and supports GPU culling optimizations.
+
+> ✅ Accurate terrain sampling + flood depth ensures visual fidelity with real topography.  
+> 🔧 **TODO**: Introduce smooth color gradients based on water depth, and add optional wave/animation effects.
 
 ---
 
 ## 🕹 XR Navigation and Interaction
 
-Implemented in `SceneNavigator.cs` and `FloodInteraction.cs`.
+Navigation and interaction in the immersive environment are handled through the `SceneNavigator.cs` and `FloodInteraction.cs` scripts. These provide intuitive, controller-based movement and interactive tools tailored for **Meta Quest 3** using **Unity's OpenXR Plugin**.
 
-### 🎮 Controls
+### 🎮 Locomotion Mechanics (`SceneNavigator.cs`)
+
+The system provides full 6-DOF (degrees of freedom) movement in large-scale, globally anchored environments:
+
+- **Right Thumbstick**: 
+  - Moves the user along the horizontal plane defined by the headset’s orientation.
+  - Combines forward/back and strafe left/right movement using the camera's directional vectors.
+
+- **Left Thumbstick**:
+  - Moves the user vertically up/down.
+  - Enables aerial exploration (flying) or elevated observation modes.
+
+- **Index Triggers (Left & Right)**:
+  - Movement speed scales with the degree to which the trigger is pressed (analog input).
+  - Allows slow walking for close inspection or fast flying across regions.
+
+- **Hand Triggers (Left & Right)**:
+  - Rotates the entire `TrackingSpace` (the GameObject under which the player is anchored) left or right.
+  - This acts as smooth snap-turn functionality for broader directional control.
+
+### 🎛 Interaction Features (`FloodInteraction.cs`)
+
+Initial interaction capability includes:
+
+- **Right A Button**:  
+  - Toggles the visibility of the flood mesh in the scene.
+  - Allows quick switching between flooded and non-flooded views for comparison or impact assessment.
+
+> This forms the basis for further interactive features, such as:
+> - **Data probing tools** to inspect flood depth at specific locations.
+> - **Spatial queries** (e.g., selecting high-risk areas).
+> - **Temporal controls** to step through time-varying flood scenarios.
+
+
+### 🎮 Controls Overview
 
 | **Input**                 | **Action**                                         |
 |--------------------------|----------------------------------------------------|
@@ -96,9 +157,6 @@ Implemented in `SceneNavigator.cs` and `FloodInteraction.cs`.
 | Left/Right Index Trigger | Control movement speed (analog, pressure-based)    |
 | Left/Right Hand Trigger  | Rotate view left/right                             |
 | Right 'A' Button         | Toggle flood visibility (show/hide water mesh)     |
-
-> 🚀 XR support is enabled via **OpenXR** and tested on **Meta Quest 3**.  
-> 🔧 Make sure to configure XR settings correctly via **Project Settings** as per the [Meta XR Unity Setup Guide](https://developers.meta.com/horizon/documentation/unity/unity-project-setup).
 
 ---
 
