@@ -1,6 +1,8 @@
 ﻿# 🌍 Immersive 3D Flood Data Visualization in Unity for Meta Quest
 
-This Unity project provides an immersive 3D visualization of real-world flood data on Meta Quest (tested with Quest 3). It integrates geospatial terrain and building data with flood simulation data, allowing users to walk, fly, and interact within flooded environments in virtual reality.
+This Unity project delivers a highly immersive 3D visualization of real-world flood data, designed specifically for **VR on Meta Quest 3**. Built using [Cesium for Unity](https://cesium.com/learn/unity/), it renders high-fidelity, globe-scale terrain and cityscapes—including [Photorealisitic 3D Tiles](https://developers.google.com/maps/documentation/tile/3d-tiles) from Google Earth and [OpenStreetMap building](https://www.openstreetmap.org/#map=13/51.94691/6.97400)—to recreate flooded environments with geospatial accuracy.
+
+Users can **walk, fly, and explore in full virtual reality**, experiencing flood impacts from a street-level or aerial perspective. The integration of **Cesium’s double-precision geospatial engine** with Unity’s XR platform ensures both global-scale navigation and local immersion are fluid and precise.
 
 ---
 
