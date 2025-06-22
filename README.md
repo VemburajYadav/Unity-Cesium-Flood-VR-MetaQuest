@@ -55,7 +55,7 @@ This guide covers project configuration for Meta Quest support, including:
 
 ## 🌊 Flood Data Pipeline
 
-Flood data starts with a `.tif` file (e.g., `flood_data.tif`) and is converted into binary format using a simple python script. For more information on reading the `.tif` files, processing and saving the `.bin` 
+Flood data starts with a `.tif` file (e.g., `flood_data.tif`) and is converted into binary format using a simple python script. For more information on reading the `.tif` files, processing and saving the resulting `.bin` 
 files compatible with this application, refer to this [github repo](https://github.com/VemburajYadav/TIFF-Data-Processing).
 
 ### Output Files (per flood dataset):
