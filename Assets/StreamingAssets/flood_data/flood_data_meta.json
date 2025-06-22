@@ -1,0 +1,20 @@
+{
+  "shape": [
+    256,
+    256
+  ],
+  "dtype": "float64",
+  "mask_dtype": "uint8",
+  "ecef_format": "x,y",
+  "wgs84_format": "lon,lat",
+  "src_crs_format": "x,y",
+  "crs": "EPSG:3857",
+  "transform": [
+    479152.34375,
+    4.9835205078125,
+    0.0,
+    5442867.5,
+    0.0,
+    -4.984375
+  ]
+}
