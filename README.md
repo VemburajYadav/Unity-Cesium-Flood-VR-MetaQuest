@@ -115,6 +115,8 @@ Flood data visualization is managed through the `FloodVisualizer.cs` script, whi
 
 Navigation and interaction in the immersive environment are handled through the `SceneNavigator.cs` and `FloodInteraction.cs` scripts. These provide intuitive, controller-based movement and interactive tools tailored for **Meta Quest 3** using **Unity's OpenXR Plugin**.
 
+![Quest controller](Thumbnails/controller.png)
+
 ### 🎮 Locomotion Mechanics (`SceneNavigator.cs`)
 
 The system provides full 6-DOF (degrees of freedom) movement in large-scale, globally anchored environments:
